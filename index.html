@@ -268,8 +268,51 @@
                             </div>
                         </div>
                     </button>
+                    <button onclick="switchMtrView('mtr-password')" class="w-full flex items-center justify-between p-5 bg-white/5 border border-white/5 rounded-3xl hover:bg-orange-500/10 hover:border-orange-500/30 transition-all group">
+    <i data-lucide="chevron-left" class="w-4 h-4 text-gray-700 group-hover:text-orange-400"></i>
+    <div class="flex items-center gap-4 text-right">
+        <div>
+            <h4 class="text-white font-bold text-sm">تغيير كلمة المرور</h4>
+            <p class="text-[10px] text-gray-500">تحديث بيانات الدخول الخاصة بك</p>
+        </div>
+        <div class="p-3 bg-orange-500/10 rounded-2xl text-orange-400 group-hover:scale-110 transition-transform">
+            <i data-lucide="key-round" class="w-5 h-5"></i>
+        </div>
+    </div>
+</button>
                 </div>
+<div id="mtr-password" class="hidden space-y-6 text-right pb-4" dir="rtl">
+    <button onclick="switchMtrView('mtr-main-menu')" class="flex items-center gap-2 text-orange-400 text-[10px] font-black uppercase hover:gap-3 transition-all mb-4">
+        <i data-lucide="arrow-right" class="w-4 h-4"></i> العودة للمركز
+    </button>
+    <div class="border-r-4 border-orange-500 pr-4 mb-6">
+        <h4 class="text-white font-black text-xl tracking-tighter">تحديث الأمان</h4>
+        <p class="text-[9px] text-orange-500/70 font-mono uppercase mt-1">Update Security Credentials</p>
+    </div>
+    
+    <div class="space-y-4">
+        <div class="space-y-2 relative">
+            <label class="text-[10px] font-bold text-gray-500 px-2">كلمة المرور الجديدة</label>
+            <input type="password" id="new-password" placeholder="••••••••"
+                   class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 pl-10 text-white text-sm focus:border-orange-500/50 outline-none transition-all">
+            <!-- أيقونة العين تتحكم في كلا الحقلين -->
+            <i data-lucide="eye" class="absolute top-1/2 left-3 -translate-y-1/2 cursor-pointer text-gray-400"
+               onclick="toggleBothPasswords()"></i>
+        </div>
 
+        <div class="space-y-2">
+            <label class="text-[10px] font-bold text-gray-500 px-2">تأكيد كلمة المرور</label>
+            <input type="password" id="confirm-password" placeholder="••••••••"
+                   class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white text-sm focus:border-orange-500/50 outline-none transition-all">
+        </div>
+
+        <button onclick="handlePasswordUpdate()" id="update-pass-btn" 
+                class="w-full py-4 bg-orange-500 hover:bg-orange-600 text-black font-black 
+                       rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-2">
+            تحديث كلمة المرور
+        </button>
+    </div>
+</div>
                 <div id="mtr-privacy" class="hidden space-y-6 text-right pb-4" dir="rtl">
                     <button onclick="switchMtrView('mtr-main-menu')" class="flex items-center gap-2 text-cyan-400 text-[10px] font-black uppercase hover:gap-3 transition-all mb-4">
                         <i data-lucide="arrow-right" class="w-4 h-4"></i> العودة للمركز
@@ -349,24 +392,24 @@
             toggleModal('mtr-center-modal', true);
         }
 
-        // التبديل بين الشاشات داخل المودال
-        function switchMtrView(viewId) {
-            const views = ['mtr-main-menu', 'mtr-privacy', 'mtr-dev'];
-            views.forEach(v => {
-                const el = document.getElementById(v);
-                if (el) {
-                    el.classList.add('hidden');
-                    el.classList.remove('animate-in', 'slide-in-from-bottom-5');
-                }
-            });
-            const target = document.getElementById(viewId);
-            if (target) {
-                target.classList.remove('hidden');
-                target.classList.add('animate-in', 'slide-in-from-bottom-5', 'duration-500');
-            }
-            // تحديث الأيقونات في حال تم تحميل محتوى جديد
-            if (window.lucide) lucide.createIcons();
+       // التبديل بين الشاشات داخل المودال
+function switchMtrView(viewId) {
+    const views = ['mtr-main-menu', 'mtr-privacy', 'mtr-dev', 'mtr-password']; // <-- هنا أضفنا mtr-password
+    views.forEach(v => {
+        const el = document.getElementById(v);
+        if (el) {
+            el.classList.add('hidden');
+            el.classList.remove('animate-in', 'slide-in-from-bottom-5');
         }
+    });
+    const target = document.getElementById(viewId);
+    if (target) {
+        target.classList.remove('hidden');
+        target.classList.add('animate-in', 'slide-in-from-bottom-5', 'duration-500');
+    }
+    // تحديث الأيقونات في حال تم تحميل محتوى جديد
+    if (window.lucide) lucide.createIcons();
+}
 
         // دالة التحكم في إظهار/إخفاء المودال
         function toggleModal(id, show) {
@@ -382,48 +425,82 @@
         }
     </script>
         <!-- Main Feed -->
-        <section id="home" class="tab-content active p-2">
-            <div id="gallery" class="gallery-grid">
-                <!-- Skeleton Loading -->
-                <div class="glass-card aspect-square shimmer"></div>
-                <div class="glass-card aspect-square shimmer"></div>
-                <div class="glass-card aspect-square shimmer"></div>
-                <div class="glass-card aspect-square shimmer"></div>
-            </div>
-        </section>
+    <section id="home" class="tab-content active p-2">
+        <div id="gallery" class="gallery-grid grid grid-cols-2 gap-2">
+            <div class="glass-card aspect-square shimmer bg-white/5 rounded-2xl"></div>
+            <div class="glass-card aspect-square shimmer bg-white/5 rounded-2xl"></div>
+            <div class="glass-card aspect-square shimmer bg-white/5 rounded-2xl"></div>
+            <div class="glass-card aspect-square shimmer bg-white/5 rounded-2xl"></div>
+        </div>
+    </section>
 
-        <!-- Auth Sections -->
-        <section id="login" class="tab-content hidden fixed inset-0 z-[10000] bg-slate-950 p-6 flex items-center justify-center">
-            <div class="w-full max-w-sm space-y-6">
-                <button onclick="showSection('home')" class="text-gray-500 flex items-center gap-2"><i data-lucide="arrow-right"></i> رجوع</button>
-                <div class="text-center">
-                    <h2 class="text-3xl font-black">تسجيل الدخول</h2>
-                    <p class="text-gray-500 mt-2">مرحباً بك مجدداً يا زميلي</p>
-                </div>
-                <form onsubmit="handleLogin(event)" class="space-y-4">
+    <!-- Login Section -->
+    <section id="login" class="tab-content hidden fixed inset-0 z-[10000] bg-slate-950 p-6 flex items-center justify-center">
+        <div class="w-full max-w-sm space-y-6">
+            <button onclick="showSection('home')" class="text-gray-500 flex items-center gap-2">
+                <i data-lucide="arrow-right"></i> رجوع
+            </button>
+            <div class="text-center">
+                <h2 class="text-3xl font-black">تسجيل الدخول</h2>
+                <p class="text-gray-500 mt-2">مرحباً بك مجدداً يا زميلي</p>
+            </div>
+            <form id="login-form" class="space-y-4" onsubmit="handleLogin(event)">
+                <div>
                     <input type="email" id="login-email" placeholder="البريد الالكتروني" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 outline-none focus:border-cyan-500 transition-all">
-                    <input type="password" id="login-pass" placeholder="كلمة المرور" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 outline-none focus:border-cyan-500 transition-all">
-                    <button type="submit" id="login-btn" class="w-full bg-cyan-500 text-black py-4 rounded-2xl font-black shadow-lg shadow-cyan-500/20">دخول</button>
-                </form>
-            </div>
-        </section>
-
-        <section id="register" class="tab-content hidden fixed inset-0 z-[10000] bg-slate-950 p-6 flex items-center justify-center">
-            <div class="w-full max-w-sm space-y-6">
-                <button onclick="showSection('home')" class="text-gray-500 flex items-center gap-2"><i data-lucide="arrow-right"></i> رجوع</button>
-                <div class="text-center">
-                    <h2 class="text-3xl font-black">إنشاء حساب</h2>
-                    <p class="text-gray-500 mt-2">كن جزءاً من تاريخ Batch 11 IT</p>
+                    <p id="login-email-feedback" class="text-red-500 text-sm mt-1 hidden">يرجى إدخال بريد إلكتروني صحيح</p>
                 </div>
-                <form onsubmit="handleRegister(event)" class="space-y-4">
-                    <input type="text" id="reg-name" placeholder="الاسم الكامل" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 outline-none focus:border-cyan-500 transition-all">
-                    <input type="email" id="reg-email" placeholder="البريد الإلكتروني" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 outline-none focus:border-cyan-500 transition-all">
-                    <input type="password" id="reg-pass" placeholder="كلمة المرور" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 outline-none focus:border-cyan-500 transition-all">
-                    <button type="submit" id="reg-btn" class="w-full bg-white text-black py-4 rounded-2xl font-black">إنشاء الحساب</button>
-                </form>
+
+                <div class="relative">
+                    <input type="password" id="login-pass" placeholder="كلمة المرور" class="w-full p-4 pl-10 rounded-2xl bg-white/5 border border-white/10 outline-none focus:border-cyan-500 transition-all">
+                    <i data-lucide="eye" class="absolute top-1/2 left-3 -translate-y-1/2 cursor-pointer text-gray-400" onclick="togglePassword('login-pass')"></i>
+                    <p id="login-pass-feedback" class="text-red-500 text-sm mt-1 hidden">يرجى إدخال كلمة المرور</p>
+                </div>
+
+                <button type="submit" id="login-btn" class="w-full bg-cyan-500 text-black py-4 rounded-2xl font-black shadow-lg shadow-cyan-500/20">دخول</button>
+            </form>
+
+            <p class="text-white text-center cursor-pointer text-sm font-bold hover:underline" onclick="showSection('register')">انضم الآن</p>
+        </div>
+    </section>
+
+    <!-- Register Section -->
+    <section id="register" class="tab-content hidden fixed inset-0 z-[10000] bg-slate-950 p-6 flex items-center justify-center">
+        <div class="w-full max-w-sm space-y-6">
+            <button onclick="showSection('home')" class="text-gray-500 flex items-center gap-2">
+                <i data-lucide="arrow-right"></i> رجوع
+            </button>
+            <div class="text-center">
+                <h2 class="text-3xl font-black">إنشاء حساب</h2>
+                <p class="text-gray-500 mt-2">كن جزءاً من تاريخ Batch 11 IT</p>
             </div>
-        </section>
-    </main>
+            <form id="register-form" class="space-y-4" onsubmit="handleRegister(event)">
+                <div>
+                    <input type="text" id="reg-name" placeholder="الاسم الكامل" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 outline-none focus:border-cyan-500 transition-all">
+                    <p id="reg-name-feedback" class="text-red-500 text-sm mt-1 hidden">يرجى إدخال الاسم الكامل</p>
+                </div>
+
+                <div>
+                    <input type="email" id="reg-email" placeholder="البريد الإلكتروني" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 outline-none focus:border-cyan-500 transition-all">
+                    <p id="reg-email-feedback" class="text-red-500 text-sm mt-1 hidden">يرجى إدخال بريد إلكتروني صحيح</p>
+                </div>
+
+                <div class="relative">
+                    <input type="password" id="reg-pass" placeholder="كلمة المرور" class="w-full p-4 pl-10 rounded-2xl bg-white/5 border border-white/10 outline-none focus:border-cyan-500 transition-all">
+                    <i data-lucide="eye" class="absolute top-1/2 left-3 -translate-y-1/2 cursor-pointer text-gray-400" onclick="togglePassword('reg-pass')"></i>
+                    <p id="reg-pass-feedback" class="text-red-500 text-sm mt-1 hidden">يرجى إدخال كلمة المرور</p>
+                </div>
+
+                <div>
+                    <input type="password" id="reg-confirm-pass" placeholder="تأكيد كلمة المرور" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 outline-none focus:border-cyan-500 transition-all">
+                    <p id="reg-confirm-pass-feedback" class="text-red-500 text-sm mt-1 hidden">كلمة المرور غير مطابقة</p>
+                </div>
+
+                <button type="submit" id="reg-btn" class="w-full bg-white text-black py-4 rounded-2xl font-black">إنشاء الحساب</button>
+            </form>
+        </div>
+    </section>
+
+</main>
 
     
 
@@ -936,51 +1013,95 @@
             `).join('') || '<p class="text-center text-gray-500">لا يوجد متفاعلون</p>';
         }
 
-        // Utilities
-        function showSection(id) {
-            document.querySelectorAll('.tab-content').forEach(s => s.classList.add('hidden'));
-            document.getElementById(id).classList.remove('hidden');
-            if (id === 'home') document.getElementById('hero-section').classList.remove('hidden');
-            else document.getElementById('hero-section').classList.add('hidden');
-        }
+       // Utilities
+function showSection(id) {
+    document.querySelectorAll('.tab-content').forEach(s => s.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+    if (id === 'home') document.getElementById('hero-section').classList.remove('hidden');
+    else document.getElementById('hero-section').classList.add('hidden');
+}
 
-        function toggleModal(id, show) {
-            const m = document.getElementById(id);
-            if (show) { m.classList.remove('hidden'); m.classList.add('flex'); }
-            else { m.classList.add('hidden'); m.classList.remove('flex'); }
-        }
+function toggleModal(id, show) {
+    const m = document.getElementById(id);
+    if (show) { m.classList.remove('hidden'); m.classList.add('flex'); }
+    else { m.classList.add('hidden'); m.classList.remove('flex'); }
+}
 
-        function closeFullView(id) {
-            document.getElementById(id).style.display = 'none';
-        }
+function closeFullView(id) {
+    document.getElementById(id).style.display = 'none';
+}
 
-        function showToast(msg, type = "success") {
-            const container = document.getElementById('toast-container');
-            const t = document.createElement('div');
-            t.className = `glass-panel px-6 py-4 rounded-2xl border-r-4 ${type === 'success' ? 'border-cyan-500 text-cyan-400' : 'border-red-500 text-red-400'} font-bold shadow-2xl mb-3 flex items-center gap-3 animate-slide-in`;
-            t.innerHTML = `<i data-lucide="${type === 'success' ? 'check-circle' : 'alert-circle'}" class="w-5 h-5"></i> <span>${msg}</span>`;
-            container.appendChild(t);
-            lucide.createIcons();
-            setTimeout(() => {
-                t.style.opacity = '0';
-                t.style.transform = 'translateY(-20px)';
-                setTimeout(() => t.remove(), 500);
-            }, 3000);
-        }
+function showToast(msg, type = "success") {
+    const container = document.getElementById('toast-container');
+    const t = document.createElement('div');
+    t.className = `glass-panel px-6 py-4 rounded-2xl border-r-4 ${type === 'success' ? 'border-cyan-500 text-cyan-400' : 'border-red-500 text-red-400'} font-bold shadow-2xl mb-3 flex items-center gap-3 animate-slide-in`;
+    t.innerHTML = `<i data-lucide="${type === 'success' ? 'check-circle' : 'alert-circle'}" class="w-5 h-5"></i> <span>${msg}</span>`;
+    container.appendChild(t);
+    lucide.createIcons();
+    setTimeout(() => {
+        t.style.opacity = '0';
+        t.style.transform = 'translateY(-20px)';
+        setTimeout(() => t.remove(), 500);
+    }, 3000);
+}
 
-        // Upload Preview
-        function previewUpload(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = e => {
-                    document.getElementById('upload-preview').classList.remove('hidden');
-                    document.getElementById('upload-preview').querySelector('img').src = e.target.result;
-                    document.getElementById('upload-icon-box').classList.add('hidden');
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
+// Upload Preview
+function previewUpload(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            document.getElementById('upload-preview').classList.remove('hidden');
+            document.getElementById('upload-preview').querySelector('img').src = e.target.result;
+            document.getElementById('upload-icon-box').classList.add('hidden');
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
 
+// Toggle visibility of both password fields using the first field's eye icon
+function toggleBothPasswords() {
+    const newPass = document.getElementById("new-password");
+    const confirmPass = document.getElementById("confirm-password");
+    const icon = newPass.parentNode.querySelector("i");
+
+    const isHidden = newPass.type === "password";
+
+    newPass.type = isHidden ? "text" : "password";
+    confirmPass.type = isHidden ? "text" : "password";
+
+    icon.setAttribute("data-lucide", isHidden ? "eye-off" : "eye");
+
+    if (window.lucide) lucide.replace();
+}
+
+// Password Update Handler
+async function handlePasswordUpdate() {
+    const newPass = document.getElementById('new-password').value;
+    const confirmPass = document.getElementById('confirm-password').value;
+    const btn = document.getElementById('update-pass-btn');
+
+    if (!newPass || !confirmPass) return showToast("يرجى ملء جميع الحقول", "error");
+    if (newPass.length < 6) return showToast("كلمة المرور يجب أن تكون 6 أحرف على الأقل", "error");
+    if (newPass !== confirmPass) return showToast("كلمات المرور غير متطابقة", "error");
+
+    btn.disabled = true;
+    btn.innerHTML = '<div class="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin"></div> جاري التحديث...';
+
+    const { error } = await supabaseClient.auth.updateUser({ password: newPass });
+
+    if (error) {
+        showToast("فشل التحديث: " + error.message, "error");
+    } else {
+        showToast("تم تغيير كلمة المرور بنجاح ✅", "success");
+        document.getElementById('new-password').value = '';
+        document.getElementById('confirm-password').value = '';
+        // هنا إذا عندك دالة للرجوع للقائمة الرئيسية
+        // switchMtrView('mtr-main-menu');
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = 'تحديث كلمة المرور';
+}
         async function handleFileUpload() {
             const fileInput = document.getElementById('file-input');
             const caption = document.getElementById('file-caption').value;
@@ -1065,64 +1186,127 @@
         }
 
         // Realtime Subscriptions
-        function setupRealtime() {
-            supabaseClient
-                .channel('schema-db-changes')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'images' }, fetchImages)
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'reactions' }, fetchImages)
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'comments' }, fetchImages)
-                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications' }, checkNotifications)
-                .subscribe();
+    function setupRealtime() {
+        supabaseClient
+            .channel('schema-db-changes')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'images' }, fetchImages)
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'reactions' }, fetchImages)
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'comments' }, fetchImages)
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications' }, checkNotifications)
+            .subscribe();
+    }
+
+    // Login Handler with validation
+    async function handleLogin(e) {
+        e.preventDefault();
+
+        const email = document.getElementById('login-email');
+        const pass = document.getElementById('login-pass');
+        const emailFeedback = document.getElementById('login-email-feedback');
+        const passFeedback = document.getElementById('login-pass-feedback');
+
+        let valid = true;
+        emailFeedback.classList.add('hidden');
+        passFeedback.classList.add('hidden');
+
+        if (!email.value) {
+            emailFeedback.textContent = "يرجى إدخال البريد الإلكتروني";
+            emailFeedback.classList.remove('hidden');
+            valid = false;
         }
 
-        // Auth Handlers
-        async function handleLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const pass = document.getElementById('login-pass').value;
-            const btn = document.getElementById('login-btn');
-            
-            btn.disabled = true;
-            btn.innerText = "جاري التحقق...";
-
-            const { error } = await supabaseClient.auth.signInWithPassword({ email, password: pass });
-            if (error) {
-                showToast("بيانات الدخول غير صحيحة", "error");
-                btn.disabled = false;
-                btn.innerText = "دخول";
-            } else {
-                location.reload();
-            }
+        if (!pass.value) {
+            passFeedback.textContent = "يرجى إدخال كلمة المرور";
+            passFeedback.classList.remove('hidden');
+            valid = false;
         }
 
-        async function handleRegister(e) {
-            e.preventDefault();
-            const name = document.getElementById('reg-name').value;
-            const email = document.getElementById('reg-email').value;
-            const pass = document.getElementById('reg-pass').value;
+        if (!valid) return;
 
-            const { error } = await supabaseClient.auth.signUp({
-                email,
-                password: pass,
-                options: { data: { full_name: name } }
-            });
+        const btn = document.getElementById('login-btn');
+        btn.disabled = true;
+        btn.innerText = "جاري التحقق...";
 
-            if (error) showToast(error.message, "error");
-            else {
-                showToast("تم إنشاء الحساب! سجل دخولك الان ");
-                showSection('login');
-            }
+        const { error } = await supabaseClient.auth.signInWithPassword({ email: email.value, password: pass.value });
+        if (error) {
+            showToast("بيانات الدخول غير صحيحة", "error");
+            btn.disabled = false;
+            btn.innerText = "دخول";
+        } else {
+            location.reload();
         }
+    }
 
-        // Initial Run
-        init();
+    // Register Handler with validation
+    async function handleRegister(e) {
+        e.preventDefault();
 
-        // Close UI on outside click
-        window.addEventListener('click', (e) => {
-            if (e.target.id === 'comments-view') closeFullView('comments-view');
-            if (e.target.id === 'notifications-view') closeFullView('notifications-view');
+        const name = document.getElementById('reg-name');
+        const email = document.getElementById('reg-email');
+        const pass = document.getElementById('reg-pass');
+        const confirm = document.getElementById('reg-confirm-pass');
+
+        const nameFeedback = document.getElementById('reg-name-feedback');
+        const emailFeedback = document.getElementById('reg-email-feedback');
+        const passFeedback = document.getElementById('reg-pass-feedback');
+        const confirmFeedback = document.getElementById('reg-confirm-pass-feedback');
+
+        [nameFeedback, emailFeedback, passFeedback, confirmFeedback].forEach(f => f.classList.add('hidden'));
+
+        let valid = true;
+
+        if (!name.value) { nameFeedback.textContent="يرجى إدخال الاسم الكامل"; nameFeedback.classList.remove('hidden'); valid=false; }
+        if (!email.value) { emailFeedback.textContent="يرجى إدخال البريد الإلكتروني"; emailFeedback.classList.remove('hidden'); valid=false; }
+        if (!pass.value) { passFeedback.textContent="يرجى إدخال كلمة المرور"; passFeedback.classList.remove('hidden'); valid=false; }
+        if (!confirm.value) { confirmFeedback.textContent="يرجى تأكيد كلمة المرور"; confirmFeedback.classList.remove('hidden'); valid=false; }
+        if (pass.value && confirm.value && pass.value !== confirm.value) { confirmFeedback.textContent="كلمة المرور غير مطابقة"; confirmFeedback.classList.remove('hidden'); valid=false; }
+
+        if (!valid) return;
+
+        const { error } = await supabaseClient.auth.signUp({
+            email: email.value,
+            password: pass.value,
+            options: { data: { full_name: name.value } }
         });
-document.getElementById("lightbox-bg").style.backgroundImage = `url(${imageUrl})`;
-    </script>
+
+        if (error) showToast(error.message, "error");
+        else {
+            showToast("تم إنشاء الحساب! سجل دخولك الآن");
+            showSection('login');
+        }
+    }
+
+    // Toggle password visibility (works on first password field only)
+    function togglePassword(fieldId) {
+        const mainInput = document.getElementById(fieldId);
+        let confirmInput = null;
+
+        if (fieldId === "reg-pass") {
+            confirmInput = document.getElementById("reg-confirm-pass");
+        }
+
+        const isHidden = mainInput.type === "password";
+
+        mainInput.type = isHidden ? "text" : "password";
+        if (confirmInput) confirmInput.type = isHidden ? "text" : "password";
+
+        const icon = mainInput.parentNode.querySelector("i");
+        icon.setAttribute("data-lucide", isHidden ? "eye-off" : "eye");
+
+        if (window.lucide) lucide.replace();
+    }
+
+    // Initial Run
+    init();
+
+    // Close UI on outside click
+    window.addEventListener('click', (e) => {
+        if (e.target.id === 'comments-view') closeFullView('comments-view');
+        if (e.target.id === 'notifications-view') closeFullView('notifications-view');
+    });
+
+    // Set lightbox background
+    document.getElementById("lightbox-bg").style.backgroundImage = `url(${imageUrl})`;
+</script>
 </body>
 </html>
