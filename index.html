@@ -158,9 +158,78 @@
 
         .custom-scroll::-webkit-scrollbar { width: 4px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        /* Splash Screen Transitions */
+#splash-screen {
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+#splash-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Animations */
+@keyframes slideDown {
+    0% { opacity: 0; transform: translateY(-30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-down {
+    animation: slideDown 1s ease forwards;
+}
+
+.animate-slide-up {
+    animation: slideUp 1s ease 0.5s forwards;
+}
+
+/* Loading Dots Animation */
+@keyframes bounce-dot {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1); }
+}
+
+.dot {
+    animation: bounce-dot 1.2s infinite ease-in-out;
+}
+
+.dot.delay-0 { animation-delay: 0s; }
+.dot.delay-150 { animation-delay: 0.15s; }
+.dot.delay-300 { animation-delay: 0.3s; }
+
+/* Lucide icons bounce */
+.animate-bounce {
+    animation: bounce-dot 1s infinite alternate;
+}
     </style>
 <body class="selection:bg-cyan-500/30">
+<!-- Splash Screen -->
+<div id="splash-screen" class="fixed inset-0 z-[30000] flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+    <div class="flex flex-col items-center gap-6">
+        <!-- شعار نص Batch 11 IT -->
+        <h1 class="text-5xl md:text-7xl font-extrabold tracking-widest uppercase text-gray-100 drop-shadow-lg opacity-0 animate-slide-down">
+            Batch <span class="text-cyan-400">11</span> IT
+        </h1>
 
+        <!-- أيقونات متدرجة -->
+        <div class="flex gap-8 mt-4 opacity-0 animate-slide-up">
+            <i data-lucide="activity" class="w-6 h-6 text-cyan-400 animate-bounce"></i>
+            <i data-lucide="cpu" class="w-6 h-6 text-blue-400 animate-bounce delay-200"></i>
+            <i data-lucide="code" class="w-6 h-6 text-indigo-400 animate-bounce delay-400"></i>
+        </div>
+
+        <!-- Loading Dots -->
+        <div class="flex gap-2 mt-6">
+            <div class="dot bg-cyan-400 w-3 h-3 rounded-full animate-bounce delay-0"></div>
+            <div class="dot bg-cyan-400 w-3 h-3 rounded-full animate-bounce delay-150"></div>
+            <div class="dot bg-cyan-400 w-3 h-3 rounded-full animate-bounce delay-300"></div>
+        </div>
+    </div>
+</div>
     <div id="toast-container" class="fixed top-20 left-1/2 -translate-x-1/2 z-[20000] w-[90%] max-w-sm pointer-events-none"></div>
 
     <nav class="glass-panel sticky top-0 z-[5000] px-4 py-3 border-b border-white/5">
@@ -233,7 +302,7 @@
                     </div>
                     <div>
                         <h3 class="font-black text-white text-[11px] uppercase tracking-widest leading-none mb-1">System Control</h3>
-                        <p class="text-[8px] text-cyan-500/50 font-mono tracking-tighter uppercase">Root // MTR-Engine-v2.0.0</p>
+                        <p class="text-[8px] text-cyan-500/50 font-mono tracking-tighter uppercase">Root // MTR-Engine-v4.0.0</p>
                     </div>
                 </div>
                 <button onclick="toggleModal('mtr-center-modal', false)" class="p-2 hover:bg-white/10 rounded-full text-gray-500 hover:text-white transition-colors">
@@ -377,7 +446,7 @@
                         <span>Auth State: Verified</span>
                     </div>
                     <div class="mt-1 px-3 py-1 bg-cyan-500/5 border border-cyan-500/20 rounded-full">
-                        <span class="text-[9px] font-black text-cyan-400 font-mono tracking-widest uppercase">Production Build <span class="text-white ml-1">v2.0.0</span></span>
+                        <span class="text-[9px] font-black text-cyan-400 font-mono tracking-widest uppercase">رقم التحديث <span class="text-white ml-1">v4.0.0</span></span>
                     </div>
                 </div>
             </div>
@@ -1184,7 +1253,14 @@ async function handlePasswordUpdate() {
                 }
             };
         }
+// Splash Screen Logic
+window.addEventListener('load', () => {
+    const splash = document.getElementById('splash-screen');
 
+    setTimeout(() => {
+        splash.classList.add('hidden');
+    }, 3000); // 3 ثواني
+});
         // Realtime Subscriptions
     function setupRealtime() {
         supabaseClient
